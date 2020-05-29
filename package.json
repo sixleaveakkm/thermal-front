@@ -8,6 +8,8 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "2d-bicubic-interpolate": "^1.0.7",
+    "axios": "^0.19.2",
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
