@@ -1,18 +1,30 @@
 <template>
   <div id="app">
     <h3>Thermal Camera</h3>
-    <div @click="setWebSocket">Connection Lost.</div>
+    <Row>
+      <Col span="4" offset="10">
+        <Alert type="error" show-icon closable @on-close="setWebSocket">
+          Connection Lost
+          <span slot="close">Reconnect</span>
+        </Alert>
+      </Col>
+    </Row>
+
     <Canvas2 :data="data"/>
   </div>
 </template>
 
 <script lang="ts">
+  import {Alert, Col, Row} from "view-design"
   import {Component, Vue} from 'vue-property-decorator';
   import Canvas from './components/Canvas.vue';
   import Canvas2 from './components/Canvas2.vue';
 
   @Component({
     components: {
+      Alert,
+      Row,
+      Col,
       Canvas,
       Canvas2,
     },
@@ -21,16 +33,20 @@
     // language=JSON
     protected data = '[]';
     private intervalId: number | undefined;
-    protected ws: WebSocket | undefined;
+    protected ws: WebSocket;
+
+    public constructor() {
+      super();
+    }
 
     private setWebSocket() {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const that: App = this;
       this.ws = new WebSocket("ws://192.168.1.101:8102", "thermal-rs")
 
-      this.ws.onopen = function () {
+      this.ws.onopen = () => {
         console.log("Connection open")
-        this.send("Hello")
+        this.ws.send("Hello")
       }
       this.ws.onclose = function () {
         console.log("Connection closed.")
